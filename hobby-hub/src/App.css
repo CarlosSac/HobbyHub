@@ -73,7 +73,7 @@
 .navbar-right {
     display: flex;
     gap: 10px;
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
 .home-button,
@@ -89,4 +89,34 @@
 .home-button:hover,
 .create-post-button:hover {
     background-color: #777;
+}
+
+.header {
+    margin-top: 60px;
+    padding: 20px;
+    text-align: center;
+}
+
+.main-content {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.post-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-card h2 {
+    margin-top: 0;
+}
+
+.post-card p {
+    color: #555;
 }
