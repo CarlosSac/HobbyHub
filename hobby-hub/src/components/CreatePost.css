@@ -33,6 +33,29 @@
     box-sizing: border-box;
 }
 
+.inline-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.inline-item {
+    display: flex;
+    align-items: center;
+}
+
+.inline-item label {
+    margin-right: 5px;
+}
+
+.inline-item input {
+    width: 60px;
+    margin-right: 5px;
+}
+
+.unit {
+    margin-left: 5px;
+}
+
 button {
     padding: 10px 20px;
     font-size: 16px;
@@ -44,4 +67,14 @@ button {
 
 button:hover {
     background-color: #777;
+}
+
+.media-preview {
+    margin-top: 20px;
+}
+
+.media-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
 }

@@ -120,3 +120,17 @@
 .post-card p {
     color: #555;
 }
+
+.post-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.post-iframe {
+    width: 100%;
+    height: 200px;
+    border-radius: 5px;
+    margin-top: 10px;
+}

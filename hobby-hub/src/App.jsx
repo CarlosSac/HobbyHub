@@ -1,16 +1,32 @@
-import { useState } from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    Link,
-    useLocation,
-} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import CreatePost from "./components/CreatePost";
+import { supabase } from "./client/client.js";
 
 function App() {
-    const [count, setCount] = useState(0);
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const { data, error } = await supabase
+                .from("posts")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                console.error("Error fetching posts:", error);
+            } else {
+                setPosts(data);
+            }
+        };
+
+        fetchPosts();
+    }, []);
+
+    const isImageLink = (url) => {
+        return /\.(jpg|jpeg|png|gif|webp)$/.test(url);
+    };
 
     return (
         <Router>
@@ -27,7 +43,9 @@ function App() {
                         <Link to='/' className='home-button'>
                             Home
                         </Link>
-                        <ConditionalCreatePostButton />
+                        <Link to='/create-post' className='create-post-button'>
+                            Create New Post
+                        </Link>
                     </div>
                 </nav>
                 <Routes>
@@ -46,24 +64,37 @@ function App() {
                                     </p>
                                 </header>
                                 <main className='main-content'>
-                                    <div className='post-card'>
-                                        <h2>Project Title 1</h2>
-                                        <p>
-                                            Description of the first project...
-                                        </p>
-                                    </div>
-                                    <div className='post-card'>
-                                        <h2>Project Title 2</h2>
-                                        <p>
-                                            Description of the second project...
-                                        </p>
-                                    </div>
-                                    <div className='post-card'>
-                                        <h2>Project Title 3</h2>
-                                        <p>
-                                            Description of the third project...
-                                        </p>
-                                    </div>
+                                    {posts.map((post) => (
+                                        <div
+                                            className='post-card'
+                                            key={post.id}
+                                        >
+                                            <h2>{post.title}</h2>
+                                            <p>{post.description}</p>
+                                            {post.mediaLink &&
+                                                (isImageLink(post.mediaLink) ? (
+                                                    <img
+                                                        src={post.mediaLink}
+                                                        alt='Preview'
+                                                        className='post-image'
+                                                        onError={(e) => {
+                                                            e.target.onerror =
+                                                                null;
+                                                            e.target.src =
+                                                                "https://via.placeholder.com/300";
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <iframe
+                                                        src={post.mediaLink}
+                                                        title={post.title}
+                                                        className='post-iframe'
+                                                        frameBorder='0'
+                                                        allowFullScreen
+                                                    ></iframe>
+                                                ))}
+                                        </div>
+                                    ))}
                                 </main>
                             </>
                         }
@@ -72,18 +103,6 @@ function App() {
                 </Routes>
             </div>
         </Router>
-    );
-}
-
-function ConditionalCreatePostButton() {
-    const location = useLocation();
-    if (location.pathname === "/create-post") {
-        return null;
-    }
-    return (
-        <Link to='/create-post' className='create-post-button'>
-            Create New Post
-        </Link>
     );
 }
 
