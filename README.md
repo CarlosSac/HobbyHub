@@ -10,9 +10,9 @@ Time spent: **X** hours spent in total
 
 The following **required** functionality is completed:
 
-- [ ] **A create form that allows the user to create posts**
-- [ ] **Posts have a title and optionally additional textual content and/or an image added as an external image URL**
-- [ ] **A home feed displaying previously created posts**
+- [x] **A create form that allows the user to create posts**
+- [x] **Posts have a title and optionally additional textual content and/or an image added as an external image URL**
+- [x] **A home feed displaying previously created posts**
 - [ ] **By default, the time created, title, and number of upvotes for each post is shown on the feed**
 - [ ] **Clicking on a post shall direct the user to a new page for the selected post**
 - [ ] **Users can sort posts by either their created time or upvotes count**
