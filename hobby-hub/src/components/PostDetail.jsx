@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./PostDetail.css";
 import { useParams, useNavigate } from "react-router-dom";
-import { supabase } from "../client/client.js"; // Adjust the import path as needed
+import { supabase } from "../client/client.js";
 
 function PostDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
     const [upvotes, setUpvotes] = useState(0);
+    const [comments, setComments] = useState([]);
+    const [commentContent, setCommentContent] = useState("");
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -26,7 +28,22 @@ function PostDetail() {
         };
 
         fetchPost();
+        fetchComments();
     }, [id]);
+
+    const fetchComments = async () => {
+        const { data, error } = await supabase
+            .from("comments")
+            .select("*")
+            .eq("post_id", id)
+            .order("created_at", { ascending: true });
+
+        if (error) {
+            console.error("Error fetching comments:", error);
+        } else {
+            setComments(data);
+        }
+    };
 
     const handleUpvote = async () => {
         const { data, error } = await supabase
@@ -41,18 +58,18 @@ function PostDetail() {
         }
     };
 
-    const handleDelete = async () => {
-        const { error } = await supabase.from("posts").delete().eq("id", id);
+    const handleCommentSubmit = async (e) => {
+        e.preventDefault();
+        const { data, error } = await supabase
+            .from("comments")
+            .insert([{ post_id: id, content: commentContent }]);
 
         if (error) {
-            console.error("Error deleting post:", error);
+            console.error("Error submitting comment:", error);
         } else {
-            navigate("/"); // Redirect to home page after deletion
+            setCommentContent("");
+            fetchComments();
         }
-    };
-
-    const handleEdit = () => {
-        navigate(`/edit-post/${id}`); // Redirect to edit post page
     };
 
     if (!post) {
@@ -64,17 +81,7 @@ function PostDetail() {
 
     return (
         <div className='post-detail-card'>
-            <div className='post-detail-header'>
-                <h2>{post.title}</h2>
-                <div className='post-detail-actions'>
-                    <button onClick={handleEdit} className='edit-button'>
-                        Edit
-                    </button>
-                    <button onClick={handleDelete} className='delete-button'>
-                        Delete
-                    </button>
-                </div>
-            </div>
+            <h2>{post.title}</h2>
             <p>{post.description}</p>
             <p>Print Time: {post.printTime} hrs</p>
             <p>Assembly Time: {post.assemblyTime} hrs</p>
@@ -104,6 +111,28 @@ function PostDetail() {
                 <button onClick={handleUpvote} className='upvote-button'>
                     Upvote ({upvotes})
                 </button>
+            </div>
+            <div className='comments-section'>
+                <h3>Comments</h3>
+                <form onSubmit={handleCommentSubmit}>
+                    <textarea
+                        value={commentContent}
+                        onChange={(e) => setCommentContent(e.target.value)}
+                        placeholder='Add a comment...'
+                        required
+                    ></textarea>
+                    <button type='submit'>Submit</button>
+                </form>
+                <div className='comments-list'>
+                    {comments.map((comment) => (
+                        <div key={comment.id} className='comment'>
+                            <p>{comment.content}</p>
+                            <span>
+                                {new Date(comment.created_at).toLocaleString()}
+                            </span>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
