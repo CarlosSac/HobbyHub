@@ -1,8 +1,8 @@
-# Web Development Final Project - *Name of App Here*
+# Web Development Final Project - *PrintInspire*
 
 Submitted by: **Carlos Sac**
 
-This web app: **insert description**
+This web app: **Discover, share, and get inspired by amazing 3D print projects from the community. Share your own creations, find new ideas, and connect with fellow makers!**
 
 Time spent: **X** hours spent in total
 
@@ -13,8 +13,8 @@ The following **required** functionality is completed:
 - [x] **A create form that allows the user to create posts**
 - [x] **Posts have a title and optionally additional textual content and/or an image added as an external image URL**
 - [x] **A home feed displaying previously created posts**
-- [ ] **By default, the time created, title, and number of upvotes for each post is shown on the feed**
-- [ ] **Clicking on a post shall direct the user to a new page for the selected post**
+- [x] **By default, the time created, title, and number of upvotes for each post is shown on the feed**
+- [x] **Clicking on a post shall direct the user to a new page for the selected post**
 - [ ] **Users can sort posts by either their created time or upvotes count**
 - [ ] **Users can search for posts by title**
 - [ ] **A separate post page for each created post, where any additional information is shown is linked whenever a user clicks a post**
