@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import CreatePost from "./components/CreatePost";
+import EditPost from "./components/EditPost"; // Import the EditPost component
 import PostDetail from "./components/PostDetail"; // Import the PostDetail component
 import { supabase } from "./client/client.js";
 
@@ -158,6 +159,8 @@ function App() {
                         }
                     />
                     <Route path='/create-post' element={<CreatePost />} />
+                    <Route path='/edit-post/:id' element={<EditPost />} />{" "}
+                    {/* Add the EditPost route */}
                     <Route path='/post/:id' element={<PostDetail />} />{" "}
                     {/* Add the PostDetail route */}
                 </Routes>
