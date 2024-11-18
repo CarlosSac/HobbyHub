@@ -7,13 +7,14 @@ import { supabase } from "./client/client.js";
 
 function App() {
     const [posts, setPosts] = useState([]);
+    const [sortCriteria, setSortCriteria] = useState("created_at");
 
     useEffect(() => {
         const fetchPosts = async () => {
             const { data, error } = await supabase
                 .from("posts")
                 .select("*")
-                .order("created_at", { ascending: false });
+                .order(sortCriteria, { ascending: false });
 
             if (error) {
                 console.error("Error fetching posts:", error);
@@ -23,10 +24,27 @@ function App() {
         };
 
         fetchPosts();
-    }, []);
+    }, [sortCriteria]);
 
     const isImageLink = (url) => {
         return /\.(jpg|jpeg|png|gif|webp)$/.test(url);
+    };
+
+    const formatDate = (dateString) => {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        const date = new Date(dateString).toLocaleDateString(
+            undefined,
+            options
+        );
+        const time = new Date(dateString).toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        return `${date} at ${time}`;
+    };
+
+    const handleSortChange = (criteria) => {
+        setSortCriteria(criteria);
     };
 
     return (
@@ -64,6 +82,33 @@ function App() {
                                         makers!
                                     </p>
                                 </header>
+                                <div className='sort-container'>
+                                    <span className='sort-label'>Sort By:</span>
+                                    <button
+                                        className={`sort-button ${
+                                            sortCriteria === "created_at"
+                                                ? "active"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            handleSortChange("created_at")
+                                        }
+                                    >
+                                        Created Time
+                                    </button>
+                                    <button
+                                        className={`sort-button ${
+                                            sortCriteria === "upvotes"
+                                                ? "active"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            handleSortChange("upvotes")
+                                        }
+                                    >
+                                        Upvotes
+                                    </button>
+                                </div>
                                 <main className='main-content'>
                                     {posts.map((post) => (
                                         <Link
@@ -98,6 +143,13 @@ function App() {
                                                             allowFullScreen
                                                         ></iframe>
                                                     ))}
+                                                <p>Upvotes: {post.upvotes}</p>
+                                                <p>
+                                                    Created at:{" "}
+                                                    {formatDate(
+                                                        post.created_at
+                                                    )}
+                                                </p>
                                             </div>
                                         </Link>
                                     ))}
