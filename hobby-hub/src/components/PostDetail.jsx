@@ -60,10 +60,25 @@ function PostDetail() {
     };
 
     const handleDelete = async () => {
-        const { error } = await supabase.from("posts").delete().eq("id", id);
+        // Delete comments first
+        const { error: deleteCommentsError } = await supabase
+            .from("comments")
+            .delete()
+            .eq("post_id", id);
 
-        if (error) {
-            console.error("Error deleting post:", error);
+        if (deleteCommentsError) {
+            console.error("Error deleting comments:", deleteCommentsError);
+            return;
+        }
+
+        // Delete the post
+        const { error: deletePostError } = await supabase
+            .from("posts")
+            .delete()
+            .eq("id", id);
+
+        if (deletePostError) {
+            console.error("Error deleting post:", deletePostError);
         } else {
             navigate("/"); // Redirect to home page after deletion
         }
