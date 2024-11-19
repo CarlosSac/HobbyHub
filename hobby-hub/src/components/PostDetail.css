@@ -1,12 +1,24 @@
 .post-detail-card {
+    position: relative; /* Add relative positioning */
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 20px;
     width: 80%; /* Use a percentage width to cover most of the screen */
     max-width: 1200px; /* Set a maximum width */
-    margin: 20px auto;
+    margin: 60px auto 20px auto; /* Add top margin to create space below the navbar */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
+}
+
+.post-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-detail-actions {
+    display: flex;
+    gap: 10px;
 }
 
 .post-detail-card h2 {
@@ -36,7 +48,9 @@
     margin-top: 20px; /* Add some space above the upvote button */
 }
 
-.upvote-button {
+.upvote-button,
+.edit-button,
+.delete-button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -45,9 +59,12 @@
     color: white;
     border-radius: 5px;
     transition: background-color 0.3s;
+    margin: 5px;
 }
 
-.upvote-button:hover {
+.upvote-button:hover,
+.edit-button:hover,
+.delete-button:hover {
     background-color: #5832c0;
 }
 
@@ -69,7 +86,6 @@
 .comments-section textarea {
     width: 98%;
     padding: 10px;
-
     border: 1px solid #ddd;
     border-radius: 5px;
     resize: vertical;

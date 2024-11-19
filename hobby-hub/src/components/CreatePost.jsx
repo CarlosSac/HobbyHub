@@ -38,7 +38,7 @@ function CreatePost() {
     };
 
     const getEmbedLink = (link) => {
-        if (link.includes("youtube.com")) {
+        if (link.includes("youtube.com/watch?v=")) {
             const videoId = link.split("v=")[1];
             const ampersandPosition = videoId.indexOf("&");
             return `https://www.youtube.com/embed/${
@@ -46,6 +46,12 @@ function CreatePost() {
                     ? videoId.substring(0, ampersandPosition)
                     : videoId
             }`;
+        } else if (link.includes("youtu.be")) {
+            const videoId = link.split("youtu.be/")[1];
+            return `https://www.youtube.com/embed/${videoId}`;
+        } else if (link.includes("youtube.com/shorts")) {
+            const videoId = link.split("shorts/")[1];
+            return `https://www.youtube.com/embed/${videoId}`;
         } else if (link.includes("vimeo.com")) {
             const videoId = link.split(".com/")[1];
             return `https://player.vimeo.com/video/${videoId}`;
@@ -54,7 +60,11 @@ function CreatePost() {
     };
 
     const isVideoLink = (link) => {
-        return link.includes("youtube.com") || link.includes("vimeo.com");
+        return (
+            link.includes("youtube.com") ||
+            link.includes("youtu.be") ||
+            link.includes("vimeo.com")
+        );
     };
 
     return (
@@ -138,7 +148,16 @@ function CreatePost() {
                                 title='Embedded Video'
                             ></iframe>
                         ) : (
-                            <img src={mediaLink} alt='Preview' />
+                            <img
+                                src={mediaLink}
+                                alt='Preview'
+                                className='post-image'
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src =
+                                        "https://via.placeholder.com/300";
+                                }}
+                            />
                         )}
                     </div>
                 )}

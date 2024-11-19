@@ -12,7 +12,7 @@ import EditPost from "./components/EditPost";
 import PostDetail from "./components/PostDetail";
 import { supabase } from "./client/client.js";
 
-function App() {
+function AppContent() {
     const [posts, setPosts] = useState([]);
     const [sortCriteria, setSortCriteria] = useState("created_at");
     const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +37,30 @@ function App() {
 
     const isImageLink = (url) => {
         return /\.(jpg|jpeg|png|gif|webp)$/.test(url);
+    };
+
+    const getThumbnailLink = (link) => {
+        if (link.includes("youtube.com/watch?v=")) {
+            const videoId = link.split("v=")[1];
+            const ampersandPosition = videoId.indexOf("&");
+            const id =
+                ampersandPosition !== -1
+                    ? videoId.substring(0, ampersandPosition)
+                    : videoId;
+            return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+        } else if (link.includes("youtu.be")) {
+            const videoId = link.split("youtu.be/")[1];
+            return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        } else if (link.includes("youtube.com/shorts")) {
+            const videoId = link.split("shorts/")[1];
+            return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        } else if (link.includes("vimeo.com")) {
+            const videoId = link.split(".com/")[1];
+            // Vimeo thumbnails require an API call to get the thumbnail URL
+            // For simplicity, we'll return a placeholder image
+            return `https://via.placeholder.com/300`;
+        }
+        return link;
     };
 
     const formatDate = (dateString) => {
@@ -68,6 +92,11 @@ function App() {
         <div className='App'>
             <nav className='navbar'>
                 <div className='navbar-left'>
+                    <Link to='/' className='logo'>
+                        PrintInspire
+                    </Link>
+                </div>
+                <div className='navbar-center'>
                     <input
                         type='text'
                         placeholder='Search...'
@@ -125,45 +154,63 @@ function App() {
                                 </button>
                             </div>
                             <main className='main-content'>
-                                {filteredPosts.map((post) => (
-                                    <Link
-                                        to={`/post/${post.id}`}
-                                        key={post.id}
-                                        className='post-card-link'
-                                    >
-                                        <div className='post-card'>
-                                            <h2>{post.title}</h2>
-                                            <p>{post.description}</p>
-                                            {post.mediaLink &&
-                                                (isImageLink(post.mediaLink) ? (
-                                                    <img
-                                                        src={post.mediaLink}
-                                                        alt='Preview'
-                                                        className='post-image'
-                                                        onError={(e) => {
-                                                            e.target.onerror =
-                                                                null;
-                                                            e.target.src =
-                                                                "https://via.placeholder.com/300";
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <iframe
-                                                        src={post.mediaLink}
-                                                        title={post.title}
-                                                        className='post-iframe'
-                                                        frameBorder='0'
-                                                        allowFullScreen
-                                                    ></iframe>
-                                                ))}
-                                            <p>Upvotes: {post.upvotes}</p>
-                                            <p>
-                                                Created at:{" "}
-                                                {formatDate(post.created_at)}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                ))}
+                                {filteredPosts.map((post) => {
+                                    const totalTime =
+                                        parseFloat(post.printTime) +
+                                        parseFloat(post.assemblyTime);
+                                    return (
+                                        <Link
+                                            to={`/post/${post.id}`}
+                                            key={post.id}
+                                            className='post-card-link'
+                                        >
+                                            <div className='post-card'>
+                                                <h2>{post.title}</h2>
+                                                <p>
+                                                    Print and Assembly Time:{" "}
+                                                    {totalTime} hrs
+                                                </p>
+                                                {post.mediaLink &&
+                                                    (isImageLink(
+                                                        post.mediaLink
+                                                    ) ? (
+                                                        <img
+                                                            src={post.mediaLink}
+                                                            alt='Preview'
+                                                            className='post-image'
+                                                            onError={(e) => {
+                                                                e.target.onerror =
+                                                                    null;
+                                                                e.target.src =
+                                                                    "https://via.placeholder.com/300";
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={getThumbnailLink(
+                                                                post.mediaLink
+                                                            )}
+                                                            alt='Video Thumbnail'
+                                                            className='post-image'
+                                                            onError={(e) => {
+                                                                e.target.onerror =
+                                                                    null;
+                                                                e.target.src =
+                                                                    "https://via.placeholder.com/300";
+                                                            }}
+                                                        />
+                                                    ))}
+                                                <p>Upvotes: {post.upvotes}</p>
+                                                <p>
+                                                    {" "}
+                                                    {formatDate(
+                                                        post.created_at
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
                             </main>
                         </>
                     }
@@ -178,10 +225,12 @@ function App() {
     );
 }
 
-export default function AppWrapper() {
+function App() {
     return (
         <Router>
-            <App />
+            <AppContent />
         </Router>
     );
 }
+
+export default App;

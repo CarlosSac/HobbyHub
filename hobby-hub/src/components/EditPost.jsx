@@ -54,12 +54,42 @@ function EditPost() {
             console.error("Error updating post:", error);
         } else {
             console.log("Post updated successfully:", data);
-            navigate(`/post/${id}`);
+            navigate(`/post/${id}`); // Redirect to the post detail page
         }
     };
 
-    const isImageLink = (url) => {
-        return /\.(jpg|jpeg|png|gif|webp)$/.test(url);
+    const handleMediaLinkChange = (e) => {
+        setMediaLink(e.target.value);
+    };
+
+    const getEmbedLink = (link) => {
+        if (link.includes("youtube.com/watch?v=")) {
+            const videoId = link.split("v=")[1];
+            const ampersandPosition = videoId.indexOf("&");
+            return `https://www.youtube.com/embed/${
+                ampersandPosition !== -1
+                    ? videoId.substring(0, ampersandPosition)
+                    : videoId
+            }`;
+        } else if (link.includes("youtu.be")) {
+            const videoId = link.split("youtu.be/")[1];
+            return `https://www.youtube.com/embed/${videoId}`;
+        } else if (link.includes("youtube.com/shorts")) {
+            const videoId = link.split("shorts/")[1];
+            return `https://www.youtube.com/embed/${videoId}`;
+        } else if (link.includes("vimeo.com")) {
+            const videoId = link.split(".com/")[1];
+            return `https://player.vimeo.com/video/${videoId}`;
+        }
+        return link;
+    };
+
+    const isVideoLink = (link) => {
+        return (
+            link.includes("youtube.com") ||
+            link.includes("youtu.be") ||
+            link.includes("vimeo.com")
+        );
     };
 
     return (
@@ -125,14 +155,24 @@ function EditPost() {
                             type='text'
                             name='mediaLink'
                             value={mediaLink}
-                            onChange={(e) => setMediaLink(e.target.value)}
+                            onChange={handleMediaLinkChange}
                         />
                     </div>
                     <button type='submit'>Update Post</button>
                 </form>
                 {mediaLink && (
                     <div className='media-preview'>
-                        {isImageLink(mediaLink) ? (
+                        {isVideoLink(mediaLink) ? (
+                            <iframe
+                                width='100%'
+                                height='315'
+                                src={getEmbedLink(mediaLink)}
+                                frameBorder='0'
+                                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                                allowFullScreen
+                                title='Embedded Video'
+                            ></iframe>
+                        ) : (
                             <img
                                 src={mediaLink}
                                 alt='Preview'
@@ -143,16 +183,6 @@ function EditPost() {
                                         "https://via.placeholder.com/300";
                                 }}
                             />
-                        ) : (
-                            <iframe
-                                width='100%'
-                                height='315'
-                                src={mediaLink}
-                                frameBorder='0'
-                                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                                allowFullScreen
-                                title='Embedded Video'
-                            ></iframe>
                         )}
                     </div>
                 )}
