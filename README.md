@@ -4,7 +4,7 @@ Submitted by: **Carlos Sac**
 
 This web app: **Discover, share, and get inspired by amazing 3D print projects from the community. Share your own creations, find new ideas, and connect with fellow makers!**
 
-Time spent: **X** hours spent in total
+Time spent: **12** hours spent in total
 
 ## Required Features
 
@@ -28,7 +28,7 @@ The following **optional** features are implemented:
 - [ ] Upon launching the web app, the user is assigned a random user ID. It will be associated with all posts and comments that they make and displayed on them.
 - [ ] Users can repost a previous post by referencing its post ID. On the post page of the new post, the referenced post is displayed and linked, creating a thread
 - [ ] Users can customize the interface of the web app
-- [ ] Users can share and view web videos
+- [x] Users can share and view web videos
 - [ ] Users can set flags while creating a post. Then users can filter posts by flags on the home feed.
 - [ ] Users can upload images directly from their local machine as an image file
 - [ ] Display a loading animation whenever data is being fetched
@@ -41,14 +41,11 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='PrintInspireDemo.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-<!-- Replace this with whatever GIF tool you used! -->
-GIF created with ...  
-<!-- Recommended tools:
-[Kap](https://getkap.co/) for macOS
-[ScreenToGif](https://www.screentogif.com/) for Windows
-[peek](https://github.com/phw/peek) for Linux. -->
+
+GIF created with [ScreenToGif](https://www.screentogif.com/) for Windows
+
 
 ## Notes
 
